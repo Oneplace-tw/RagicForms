@@ -56,6 +56,19 @@
   </div>
 
 <script>
+  const ALLOWED_SOURCE_VALUES = new Set([
+    "幸福熟齡"
+  ]);
+
+  function buildRagicUrl(uid, nickname, search = "") {
+    const requestedSource = new URLSearchParams(search).get("pfv1004768");
+    const sourceParam = ALLOWED_SOURCE_VALUES.has(requestedSource)
+      ? `&pfv1004768=${encodeURIComponent(requestedSource)}`
+      : "";
+
+    return `https://ap13.ragic.com/OnePlaceLiving/development-department/1?webview&webaction=form&ver=new&version=2&pfv1002801=${uid}&pfv1010838=${encodeURIComponent(nickname)}${sourceParam}`;
+  }
+
   async function main() {
     try {
       await liff.init({ liffId: "2006833424-920EB8ra" });
@@ -80,7 +93,7 @@
       const nickname = profile.displayName;
 
       // ✅ Ragic 表單網址（已啟用預填功能）
-      const ragicUrl = `https://ap13.ragic.com/OnePlaceLiving/development-department/1?webview&webaction=form&ver=new&version=2&pfv1002801=${uid}&pfv1010838=${encodeURIComponent(nickname)}`;
+      const ragicUrl = buildRagicUrl(uid, nickname, window.location.search);
 
       // ✅ 使用 LIFF 的 openWindow ➜ 強制在 Safari / Chrome 開啟
       liff.openWindow({
